@@ -8,6 +8,7 @@ import (
 
 type RepositoryInterface interface {
 	InsertNotification(ctx context.Context, arg db.InsertNotificationParams) error
+	UpdateStatus(ctx context.Context, arg db.UpdateStatusParams) error
 }
 
 type Repository struct {
@@ -29,4 +30,8 @@ func NewRepository(conn *sql.DB) *Repository {
 
 func (r *Repository) InsertNotification(ctx context.Context, arg db.InsertNotificationParams) error {
 	return r.Queries.InsertNotification(ctx, arg)
+}
+
+func (r *Repository) UpdateStatus(ctx context.Context, arg db.UpdateStatusParams) error {
+	return r.Queries.UpdateStatus(ctx, arg)
 }

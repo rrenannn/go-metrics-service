@@ -36,3 +36,20 @@ func (q *Queries) InsertNotification(ctx context.Context, arg InsertNotification
 	)
 	return err
 }
+
+const updateStatus = `-- name: UpdateStatus :exec
+UPDATE notifications_log
+SET status = $2, error_text = $3, updated_at = now()
+WHERE notification_id = $1
+`
+
+type UpdateStatusParams struct {
+	NotificationID uuid.UUID      `json:"notification_id"`
+	Status         string         `json:"status"`
+	ErrorText      sql.NullString `json:"error_text"`
+}
+
+func (q *Queries) UpdateStatus(ctx context.Context, arg UpdateStatusParams) error {
+	_, err := q.db.ExecContext(ctx, updateStatus, arg.NotificationID, arg.Status, arg.ErrorText)
+	return err
+}
